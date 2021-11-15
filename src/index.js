@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.status(200).json({
         status: 'success',
         code: 200,
-        message: 'Welcome to my User API',
+        message: 'Welcome to my User API Project',
         data: []
     })
 })

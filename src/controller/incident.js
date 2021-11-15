@@ -41,7 +41,7 @@ const fetchUserIncidents = async(req, res) => {
         const { params: { id } } = req
         const userIncidentReports = await getUserIncident(id)
         if (userIncidentReports.length === 0) {
-            throw new Error('No incident reports')
+            throw new Error('No incident reports. Please check again')
         }
         res.status(200).json({
             status: 'success',

@@ -49,7 +49,7 @@ const fetchWeather = async(city, country) => {
     if (weather)
         return weather
 
-    throw new Error('Could not get data of the city and country')
+    throw new Error('Could not get data of the city and country.')
 }
 
 // Creating report

@@ -12,7 +12,7 @@ const checkIfUserRegister = async(req, res, next) => {
             if (user) {
                 return res.status(401).json({
                     status: 'fail',
-                    message: 'User already exists. Log in',
+                    message: 'Oops, User already exists. Log in',
                     data: []
                 })
             }
@@ -42,7 +42,7 @@ const checkIfUserExistForLogin = async(req, res, next) => {
             if (user) {
                 return res.status(201).json({
                     status: 'success',
-                    message: 'You are logged in successfully',
+                    message: 'Congratulations You are logged in successfully!',
                     data: []
                 })
             }
