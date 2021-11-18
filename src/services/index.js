@@ -1,10 +1,12 @@
 const db = require('../db')
 const queries = require('../db/queries/index')
+const { hashPassword, comparePassword, generateToken } = require('../utils')
 const axios = require('axios').default
 
-const createUser = (body) => {
+const createUser = async(body) => {
     const { email, password, firstName, lastName } = body
-    console.log(body)
+    const encryptedPassword = await hashPassword(password)
+
     const payload = [ email, password, firstName, lastName ]
     return db.one(queries.addNewUser, payload)
 }
@@ -27,20 +29,20 @@ const validateUserLogin = (body) => {
     return true
 }
 
+//Validate password
+const validatePassword = async(user, password) => {
+    console.log(user);
+    const isValid = await comparePassword(password, user.password)
+
+    if (isValid) {
+        const token = await generateToken(user)
+        return { token }
+    }
+    return false
+}
+
 // getting user
 const getUser = email => db.any(queries.getUser, email)
-
-const getUserById = id => db.any(queries.getUserById, id)
-
-// Validate Report Input
-const validateReportInput = async(body) => {
-    const { incident_description, city, country } = body
-    
-    if (!(incident_description && city && country)) 
-        throw new Error('Ensure all fields are required')
-
-    return true
-}
 
 // Fetch weather data from api
 const fetchWeather = async(city, country) => {
@@ -49,7 +51,7 @@ const fetchWeather = async(city, country) => {
     if (weather)
         return weather
 
-    throw new Error('Could not get data of the city and country.')
+    return false
 }
 
 // Creating report
@@ -68,15 +70,20 @@ const getAllIncidents = () => db.any(queries.getIncidents)
 // Getting individual incidents
 const getUserIncident = id => db.any(queries.getUserIncidents, id)
 
+const updatePassword = async(req) => {
+    const { body: {password}, user: {id}} = req
+    const encryptedPassword = await hashPassword(password)
+    return db.one(queries.updatePassword, [encryptedPassword,id])
+
+}
+
 module.exports = {
     createUser,
-    validateUserReg,
-    validateUserLogin,
+    validatePassword,
     getUser,
-    validateReportInput,
     fetchWeather,
     createReport,
     getAllIncidents,
     getUserIncident,
-    getUserById
+    updatePassword
 }

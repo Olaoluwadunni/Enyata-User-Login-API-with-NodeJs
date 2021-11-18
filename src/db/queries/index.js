@@ -40,7 +40,15 @@ const queries = {
         SELECT * 
         FROM incidents
         WHERE client_id=$1
+    `,
+    updatePassword: `
+        Update users
+        set password = $1,
+        updated_at= NOW()
+        where id = $2
+        RETURNING *
     `
     }
+    
 
 module.exports = queries

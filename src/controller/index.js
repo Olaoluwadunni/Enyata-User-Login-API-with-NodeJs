@@ -35,5 +35,31 @@ const loginUser = async(req, res, next) => {
     next()
 }
 
-module.exports = { createNewUser, loginUser }
+const forgotPassword = async (req, res, next) => {
+    try {
+        const user = await updatePassword(req)
+        res.status(200).json({
+            status: 'success',
+            message: 'Use this token to reset your password',
+            data: user
+        })
+    } catch (error) {
+       next(error) 
+    }
+}
+
+const resetPassword = async (req, res, next) => {
+    try{
+        const {token} = req
+        res.status(200).json({
+            status: 'success',
+            message: 'use this token to reset your password',
+            data: token
+        })
+    } catch(error) {
+        next(error)
+    }
+}
+
+module.exports = { createNewUser, loginUser, forgotPassword, resetPassword }
 
